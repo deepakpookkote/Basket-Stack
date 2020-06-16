@@ -1,0 +1,60 @@
+<div class="container">
+    <div class="column">
+      <div class="card red">
+        <div class="item-name">
+           Apple
+        </div>
+        <article>
+          <h2 class="stock-count">{{appleStockCount}}</h2>
+          <div style="display: flex;margin-left: -8em;">
+            <div class="actionButtons grow" (click)="addItemToStack('addApple')"> + </div>
+            <div class="actionButtons grow" (click)="removeItemFromStack('removeApple')"> - </div>
+          </div>
+        </article>
+      </div>
+    </div>
+
+    <div class="column">
+      <div class="card orange">
+        <div class="item-name">
+          Orange
+        </div>
+        <article>
+          <h2 class="stock-count">{{orangeStockCount}}</h2>
+          <div style="display: flex;margin-left: -8em;">
+            <div class="actionButtons grow" (click)="addItemToStack('addOrange')"> + </div>
+            <div class="actionButtons grow" (click)="removeItemFromStack('removeOrange')"> - </div>
+          </div>
+        </article>
+      </div>
+    </div>
+
+    <div class="column">
+      <div class="card grapes">
+        <div class="item-name">
+            Grapes
+        </div>
+        <article>
+          <h2 class="stock-count">{{grapesStockCount}}</h2>
+          <div style="display: flex;margin-left: -8em;">
+            <div class="actionButtons grow" (click)="addItemToStack('addGrapes')"> + </div>
+            <div class="actionButtons grow" (click)="removeItemFromStack('removeGrapes')"> - </div>
+          </div>
+        </article>
+      </div>
+    </div>
+
+    <div class="section-basket-stack">
+      <h3>Basket Stack</h3>
+      <div class="column">
+          <div class="card">
+            <article>
+              <div id="contentInside" *ngFor="let item of itemStack">
+                <span [ngClass]="{'red': item === 1, 'orange': item === 2, 'grapes': item === 3}">Stack Item</span>
+              </div>
+            </article>
+          </div>
+        </div>
+  </div>
+
+  </div>
