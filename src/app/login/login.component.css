@@ -2,9 +2,18 @@ h1{
     text-align: center;
     color: black;
 }
+
+.login-content {
+  margin-top: 10%;
+}
 .formLogin{
     width: 50%;
     margin: 0 auto;
+    border: 1px solid #d8d8d8eb;
+    border-radius: 3%;
+    padding: 20px;
+    box-shadow: -1px 1px 4px 6px #d0d0d0;
+    box-sizing: content-box;
 }
 .formLogin p{
   color: red;

@@ -1,60 +1,88 @@
-<div class="container">
-    <div class="column">
-      <div class="card red">
-        <div class="item-name">
-           Apple
-        </div>
-        <article>
-          <h2 class="stock-count">{{appleStockCount}}</h2>
-          <div style="display: flex;margin-left: -8em;">
-            <div class="actionButtons grow" (click)="addItemToStack('addApple')"> + </div>
-            <div class="actionButtons grow" (click)="removeItemFromStack('removeApple')"> - </div>
-          </div>
-        </article>
-      </div>
-    </div>
-
-    <div class="column">
-      <div class="card orange">
-        <div class="item-name">
-          Orange
-        </div>
-        <article>
-          <h2 class="stock-count">{{orangeStockCount}}</h2>
-          <div style="display: flex;margin-left: -8em;">
-            <div class="actionButtons grow" (click)="addItemToStack('addOrange')"> + </div>
-            <div class="actionButtons grow" (click)="removeItemFromStack('removeOrange')"> - </div>
-          </div>
-        </article>
-      </div>
-    </div>
-
-    <div class="column">
-      <div class="card grapes">
-        <div class="item-name">
-            Grapes
-        </div>
-        <article>
-          <h2 class="stock-count">{{grapesStockCount}}</h2>
-          <div style="display: flex;margin-left: -8em;">
-            <div class="actionButtons grow" (click)="addItemToStack('addGrapes')"> + </div>
-            <div class="actionButtons grow" (click)="removeItemFromStack('removeGrapes')"> - </div>
-          </div>
-        </article>
-      </div>
-    </div>
-
-    <div class="section-basket-stack">
-      <h3>Basket Stack</h3>
-      <div class="column">
-          <div class="card">
+<app-navbar></app-navbar>
+<div class="alert alert-danger" role="alert" *ngIf="useCaseError">
+  {{warningMessage}}
+</div>
+<div class="container add-to-cart">
+  <div class="row">
+    <div class="col-md-8">
+      <div class="row">
+        <div class="col-md-4">
+          <div class="card_item red">
+            <div class="item-name">
+              Apple
+            </div>
             <article>
-              <div id="contentInside" *ngFor="let item of itemStack">
-                <span [ngClass]="{'red': item === 1, 'orange': item === 2, 'grapes': item === 3}">Stack Item</span>
+              <h2 class="stock-count">{{ appleStockCount }}</h2>
+              <div style="display: flex;">
+                <div class="actionButtons grow" (click)="addItemToStack('addApple')">
+                  +
+                </div>
+                <div class="actionButtons grow" (click)="removeItemFromStack('removeApple')">
+                  -
+                </div>
               </div>
             </article>
           </div>
         </div>
+        <div class="col-md-4">
+          <div class="card_item orange">
+            <div class="item-name">
+              Orange
+            </div>
+            <article>
+              <h2 class="stock-count">{{ orangeStockCount }}</h2>
+              <div style="display: flex;">
+                <div class="actionButtons grow" (click)="addItemToStack('addOrange')">
+                  +
+                </div>
+                <div class="actionButtons grow" (click)="removeItemFromStack('removeOrange')">
+                  -
+                </div>
+              </div>
+            </article>
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="card_item grapes">
+            <div class="item-name">
+              Grapes
+            </div>
+            <article>
+              <h2 class="stock-count">{{ grapesStockCount }}</h2>
+              <div style="display: flex;">
+                <div class="actionButtons grow" (click)="addItemToStack('addGrapes')">
+                  +
+                </div>
+                <div class="actionButtons grow" (click)="removeItemFromStack('removeGrapes')">
+                  -
+                </div>
+              </div>
+            </article>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-4">
+      <div class="item-basket">
+        <h3 class="text-white text-center">Fruits Bucket</h3>
+        <div class="column">
+          <div>
+            <article *ngIf="itemStack?.length>0; else emptyBasket">
+              <div *ngFor="let item of itemStack">
+                <span class="fruit-content text-capitalize" [ngClass]="{
+                    red: item === 1,
+                    orange: item === 2,
+                    grapes: item === 3
+                  }">{{getItemName(item)}}
+                </span>
+              </div>
+            </article>
+            <ng-template #emptyBasket>
+              <h4 class="text-white text-center mt-5">Cart Empty!!</h4>
+            </ng-template>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
-
-  </div>
+</div>

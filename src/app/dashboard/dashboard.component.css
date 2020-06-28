@@ -1,14 +1,15 @@
 .container {
-    width: 800px;
-    display: flex;
-    justify-content: space-between;
-    flex-wrap: wrap;
+    width: 100%;
     padding: 20px;
-    height: 20em;
 }
 
-.column {
-    flex: 0 1 32%;
+.add-to-cart {
+    width: 100%;
+    padding: 20px;
+    background: #212121;
+    margin-top: 5%;
+    min-height: 500px;
+    max-height: 500px;
 }
 
 .item-name {
@@ -18,11 +19,23 @@
     color: white;
 }
 
-.card {
+.card_item {
     border: 1px solid grey;
     display: flex;
     flex-direction: column;
     min-height: 100%;
+    clip-path: circle();
+    padding: 50px;
+}
+
+.item-basket {
+    border: 1px solid grey;
+    padding: 10px;
+    box-shadow: 1px 3px 3px 3px #c2c2c2;
+    overflow: auto;
+    max-height: 440px;
+    overflow-y: auto;
+    min-height: 400px;
 }
 
 .red {
@@ -48,6 +61,15 @@
     justify-content: space-around;
 }
 
+.fruit-content {
+    width: 100%;
+    display: block;
+    padding: 2px;
+    text-align: center;
+    border-radius: 50px;
+    margin-top: 4px;
+}
+
 .card article p {
     flex: 1
 }
@@ -68,7 +90,6 @@
     cursor: pointer;
     background: #673ab7;
     z-index: 10;
-    margin-right: 5px;
 }
 
 .stock-count {

@@ -16,14 +16,16 @@ export class LoginComponent implements OnInit {
 
   private authData = [
     {
-      "name": "Admin",
+      "id": 1,
+      "name": "admin",
       "permission": "all",
-      "password": "Admin"
+      "password": "admin"
     },
     {
-      "name": "MyName",
+      "id": 2,
+      "name": "deepak",
       "permission": "none",
-      "password": "test"
+      "password": "123"
     }
   ];
   constructor(
@@ -32,6 +34,7 @@ export class LoginComponent implements OnInit {
   ) { }
 
   ngOnInit() {
+    localStorage.clear();
     this.loginForm = this.formBuilder.group({
       username: ['', Validators.required],
       password: ['', Validators.required]

@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-dashboard',
@@ -16,16 +17,29 @@ export class DashboardComponent implements OnInit {
   grapesStockCountInStack = 0;
   userInfo;
   itemStack = [];
+  useCaseError = false;
+  warningMessage = '';
 
-  constructor() { }
+  constructor(private router: Router) { }
 
   ngOnInit(): void {
     this.userInfo = JSON.parse(localStorage.getItem('user'));
+    if (!this.userInfo) {
+      this.router.navigate(['/']);
+    }
+  }
+
+  invokeUserCase(errorMessage) {
+    this.useCaseError = true;
+    this.warningMessage = errorMessage;
+    setTimeout(() => {
+      this.useCaseError = false;
+    }, 3000);
   }
 
   addItemToStack(action) {
     if (this.userInfo.permission === 'none') {
-      alert('user dont have permission to perform this action');
+      this.invokeUserCase('user don\'t have permission to perform this action');
       return;
     }
     switch (action) {
@@ -51,14 +65,14 @@ export class DashboardComponent implements OnInit {
   }
   removeItemFromStack(action) {
     if (this.userInfo.permission === 'none') {
-      alert('user dont have permission to perform this action');
+      this.invokeUserCase('user don\'t have permission to perform this action');
       return;
     }
     switch (action) {
       case 'removeApple':
         if (this.appleStockCountInStack === 0) return;
         if ((this.itemStack.slice(-1)[0] !== 1)) {
-          alert('items can only be removed in Last In First Out order');
+          this.invokeUserCase('Apple can only be removed after removing fruit\'s on top');
           return;
         }
         this.appleStockCount++;
@@ -68,7 +82,7 @@ export class DashboardComponent implements OnInit {
       case 'removeOrange':
         if (this.orangeStockCountInStack === 0) return;
         if ((this.itemStack.slice(-1)[0] !== 2)) {
-          alert('items can only be removed in Last In First Out order');
+          this.invokeUserCase('Orange can only be removed after removing fruit\'s on top');
           return;
         }
         this.orangeStockCount++;
@@ -78,12 +92,28 @@ export class DashboardComponent implements OnInit {
       case 'removeGrapes':
         if (this.grapesStockCountInStack === 0) return;
         if ((this.itemStack.slice(-1)[0] !== 3)) {
-          alert('items can only be removed in Last In First Out order');
+          this.invokeUserCase('Grapes can only be removed after removing fruit\'s on top');
           return;
         }
         this.grapesStockCount++;
         this.grapesStockCountInStack--;
         this.itemStack.pop();
+        break;
+    }
+  }
+
+  getItemName(item) {
+    switch (item) {
+      case 1:
+        return 'apple';
+        break;
+      case 2:
+        return 'orange';
+        break;
+      case 3:
+        return 'grapes';
+        break;
+      default:
         break;
     }
   }
