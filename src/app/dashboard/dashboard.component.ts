@@ -37,85 +37,68 @@ export class DashboardComponent implements OnInit {
     }, 3000);
   }
 
-  addItemToStack(action) {
+  adBasketActions(itemName, itemId) {
+    if (this[`${itemName}StockCount`] === 0) {
+      this.invokeUserCase(`${itemName} stock empty!`);
+      return;
+    }
+    this[`${itemName}StockCount`]--;
+    this[`${itemName}StockCountInStack`]++;
+    this.itemStack.push(itemId);
+  }
+
+  removeItemFromBasketActions(itemName, itemId) {
+    if (this[`${itemName}StockCountInStack`] === 0) {
+      this.invokeUserCase(`${itemName} not exist in bucket`);
+      return;
+    }
+    if ((this.itemStack.slice(-1)[0] !== itemId)) {
+      this.invokeUserCase(`${itemName} can only be removed after removing fruit\'s on top`);
+      return;
+    }
+    this[`${itemName}StockCount`]++;
+    this[`${itemName}StockCountInStack`]--;
+    this.itemStack.pop();
+  }
+
+  addItemToStack(action: string) {
     if (this.userInfo.permission === 'none') {
       this.invokeUserCase('user don\'t have permission to perform this action');
       return;
     }
     switch (action) {
       case 'addApple':
-        if (this.appleStockCount === 0) return;
-        this.appleStockCount--;
-        this.appleStockCountInStack++;
-        this.itemStack.push(1);
+        this.adBasketActions('apple', 1);
         break;
       case 'addOrange':
-        if (this.orangeStockCount === 0) return;
-        this.orangeStockCount--;
-        this.orangeStockCountInStack++;
-        this.itemStack.push(2);
+        this.adBasketActions('orange', 2);
         break;
       case 'addGrapes':
-        if (this.grapesStockCount === 0) return;
-        this.grapesStockCount--;
-        this.grapesStockCountInStack++;
-        this.itemStack.push(3);
+        this.adBasketActions('grapes', 3);
         break;
     }
   }
-  removeItemFromStack(action) {
+  removeItemFromStack(action: string) {
     if (this.userInfo.permission === 'none') {
       this.invokeUserCase('user don\'t have permission to perform this action');
       return;
     }
     switch (action) {
       case 'removeApple':
-        if (this.appleStockCountInStack === 0) return;
-        if ((this.itemStack.slice(-1)[0] !== 1)) {
-          this.invokeUserCase('Apple can only be removed after removing fruit\'s on top');
-          return;
-        }
-        this.appleStockCount++;
-        this.appleStockCountInStack--;
-        this.itemStack.pop();
+        this.removeItemFromBasketActions('apple', 1);
         break;
       case 'removeOrange':
-        if (this.orangeStockCountInStack === 0) return;
-        if ((this.itemStack.slice(-1)[0] !== 2)) {
-          this.invokeUserCase('Orange can only be removed after removing fruit\'s on top');
-          return;
-        }
-        this.orangeStockCount++;
-        this.orangeStockCountInStack--;
-        this.itemStack.pop();
+        this.removeItemFromBasketActions('orange', 2);
         break;
       case 'removeGrapes':
-        if (this.grapesStockCountInStack === 0) return;
-        if ((this.itemStack.slice(-1)[0] !== 3)) {
-          this.invokeUserCase('Grapes can only be removed after removing fruit\'s on top');
-          return;
-        }
-        this.grapesStockCount++;
-        this.grapesStockCountInStack--;
-        this.itemStack.pop();
+        this.removeItemFromBasketActions('grapes', 3);
         break;
     }
   }
 
-  getItemName(item) {
-    switch (item) {
-      case 1:
-        return 'apple';
-        break;
-      case 2:
-        return 'orange';
-        break;
-      case 3:
-        return 'grapes';
-        break;
-      default:
-        break;
-    }
+  getItemName(itemId: any) {
+    const fruitList = [{id: 1, name: 'apple'}, {id: 2, name: 'orange'}, {id: 3, name: 'grapes'}];
+    return fruitList.find((item) => item.id === itemId);
   }
 
 }

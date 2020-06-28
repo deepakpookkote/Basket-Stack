@@ -1,5 +1,5 @@
 <app-navbar></app-navbar>
-<div class="alert alert-danger" role="alert" *ngIf="useCaseError">
+<div class="alert alert-danger text-capitalize col-md-6 offset-3 mt-2" role="alert" *ngIf="useCaseError">
   {{warningMessage}}
 </div>
 <div class="container add-to-cart">
@@ -73,7 +73,7 @@
                     red: item === 1,
                     orange: item === 2,
                     grapes: item === 3
-                  }">{{getItemName(item)}}
+                  }">{{getItemName(item).name}}
                 </span>
               </div>
             </article>
