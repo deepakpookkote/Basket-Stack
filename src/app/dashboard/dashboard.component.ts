@@ -80,7 +80,6 @@ export class DashboardComponent implements OnInit {
 
   userInfo: User;
   itemStack = [];
-  useCaseError = false;
   warningMessage = null;
 
   constructor(private router: Router) { }
@@ -93,11 +92,7 @@ export class DashboardComponent implements OnInit {
   }
 
   invokeUserCase(errorMessage: string) {
-    this.useCaseError = true;
     this.warningMessage = errorMessage;
-    setTimeout(() => {
-      this.useCaseError = false;
-    }, 3000);
   }
 
   adBasketActions(itemId: number, index: number) {
