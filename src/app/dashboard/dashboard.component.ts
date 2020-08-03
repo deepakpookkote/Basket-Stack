@@ -1,14 +1,26 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+import { User } from '../login/login.component';
+
+export interface Product {
+  name: string;
+  type: string;
+  stock: number;
+  initialStock: number;
+  purchased?: number;
+  productId: number;
+  color: string;
+}
 
 @Component({
   selector: 'app-dashboard',
   templateUrl: './dashboard.component.html',
   styleUrls: ['./dashboard.component.css']
 })
+
 export class DashboardComponent implements OnInit {
 
-  productsList: any = [
+  productsList: Product[] = [
     {
       name: 'apple',
       type: 'fruit',
@@ -16,7 +28,7 @@ export class DashboardComponent implements OnInit {
       initialStock: 10,
       purchased: 0,
       productId: 1,
-      color: '#f45149'
+      color: '#ed4d3b'
     },
     {
       name: 'orange',
@@ -25,7 +37,7 @@ export class DashboardComponent implements OnInit {
       stock: 10,
       purchased: 0,
       productId: 2,
-      color: '#e59d4b'
+      color: '#e45a1b'
 
     },
     {
@@ -35,7 +47,7 @@ export class DashboardComponent implements OnInit {
       initialStock: 10,
       purchased: 0,
       productId: 3,
-      color: '#5360db'
+      color: '#a75c9f'
     },
     {
       name: 'banana',
@@ -45,13 +57,31 @@ export class DashboardComponent implements OnInit {
       purchased: 0,
       productId: 4,
       color: '#d0d042'
-    }
+    },
+    {
+      name: 'tomato',
+      type: 'vegetable',
+      stock: 15,
+      initialStock: 15,
+      purchased: 0,
+      productId: 5,
+      color: '#a54128'
+    },
+    {
+      name: 'mango',
+      type: 'fruit',
+      stock: 10,
+      initialStock: 15,
+      purchased: 0,
+      productId: 6,
+      color: '#efa001'
+    },
   ];
 
-  userInfo;
+  userInfo: User;
   itemStack = [];
   useCaseError = false;
-  warningMessage = '';
+  warningMessage = null;
 
   constructor(private router: Router) { }
 
@@ -71,7 +101,7 @@ export class DashboardComponent implements OnInit {
   }
 
   adBasketActions(itemId: number, index: number) {
-    const updateItem = this.productsList[index];
+    const updateItem: Product = this.productsList[index];
     if (updateItem.stock <= 0) {
       this.invokeUserCase(`${updateItem.name} empty!`);
       return;
@@ -82,7 +112,7 @@ export class DashboardComponent implements OnInit {
   }
 
   removeItemFromBasketActions(index: number) {
-    const updatedItem = this.productsList[index];
+    const updatedItem: Product = this.productsList[index];
     if (this.itemStack.some((item) => item === updatedItem.productId)) {
       if ((this.itemStack.slice(-1)[0] !== updatedItem.productId)) {
         this.invokeUserCase(`${updatedItem.name} can only be removed after removing fruit\'s on top`);
@@ -112,6 +142,10 @@ export class DashboardComponent implements OnInit {
 
   getItemName(itemId: any) {
     return this.productsList.find((item: any) => item.productId === itemId);
+  }
+
+  closeAlert() {
+    this.warningMessage = null;
   }
 
 }

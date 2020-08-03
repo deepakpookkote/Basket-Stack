@@ -1,15 +1,13 @@
 <app-navbar></app-navbar>
-<div class="alert alert-danger text-capitalize col-md-6 offset-3 mt-2" role="alert" *ngIf="useCaseError">
-  {{warningMessage}}
-</div>
+<app-alert [message]="warningMessage" *ngIf="warningMessage" (close)="closeAlert()"></app-alert>
 <div class="container add-to-cart">
   <div class="row">
-    <div class="col-md-8">
+    <div class="col-md-8 product-view">
       <div class="row">
         <div class="col-md-4" *ngFor="let product of productsList; let i=index">
           <div class="card_item" [ngStyle]="{'background-color': product.color}">
             <div class="item-name">
-              {{product.name | titlecase   }}
+              {{product.name | titlecase}}
             </div>
             <article>
               <h2 class="stock-count">{{ product.stock }}</h2>

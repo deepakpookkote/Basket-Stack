@@ -2,11 +2,21 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 
+export interface User {
+  id: number;
+  name: string;
+  permission: string;
+  password: string;
+}
+
 @Component({
   selector: 'app-login',
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.css']
 })
+
+
+
 export class LoginComponent implements OnInit {
 
   loginForm: FormGroup;
@@ -14,7 +24,7 @@ export class LoginComponent implements OnInit {
   flagsCheck = false;
   message = "";
 
-  private authData = [
+  private authData: User[] = [
     {
       "id": 1,
       "name": "admin",
