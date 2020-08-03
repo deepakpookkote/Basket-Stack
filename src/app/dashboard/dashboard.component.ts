@@ -8,13 +8,46 @@ import { Router } from '@angular/router';
 })
 export class DashboardComponent implements OnInit {
 
-  appleStockCount: any = 10;
-  orangeStockCount: any = 10;
-  grapesStockCount: any = 10;
-  basketItemsInitialCount: any = 0;
-  appleStockCountInStack = 0;
-  orangeStockCountInStack = 0;
-  grapesStockCountInStack = 0;
+  productsList: any = [
+    {
+      name: 'apple',
+      type: 'fruit',
+      stock: 10,
+      initialStock: 10,
+      purchased: 0,
+      productId: 1,
+      color: '#f45149'
+    },
+    {
+      name: 'orange',
+      type: 'fruit',
+      initialStock: 10,
+      stock: 10,
+      purchased: 0,
+      productId: 2,
+      color: '#e59d4b'
+
+    },
+    {
+      name: 'grapes',
+      type: 'fruit',
+      stock: 10,
+      initialStock: 10,
+      purchased: 0,
+      productId: 3,
+      color: '#5360db'
+    },
+    {
+      name: 'banana',
+      type: 'fruit',
+      stock: 15,
+      initialStock: 15,
+      purchased: 0,
+      productId: 4,
+      color: '#d0d042'
+    }
+  ];
+
   userInfo;
   itemStack = [];
   useCaseError = false;
@@ -29,7 +62,7 @@ export class DashboardComponent implements OnInit {
     }
   }
 
-  invokeUserCase(errorMessage) {
+  invokeUserCase(errorMessage: string) {
     this.useCaseError = true;
     this.warningMessage = errorMessage;
     setTimeout(() => {
@@ -37,68 +70,48 @@ export class DashboardComponent implements OnInit {
     }, 3000);
   }
 
-  adBasketActions(itemName, itemId) {
-    if (this[`${itemName}StockCount`] === 0) {
-      this.invokeUserCase(`${itemName} stock empty!`);
+  adBasketActions(itemId: number, index: number) {
+    const updateItem = this.productsList[index];
+    if (updateItem.stock <= 0) {
+      this.invokeUserCase(`${updateItem.name} empty!`);
       return;
     }
-    this[`${itemName}StockCount`]--;
-    this[`${itemName}StockCountInStack`]++;
+    updateItem.stock--;
+    this.productsList[index] = updateItem;
     this.itemStack.push(itemId);
   }
 
-  removeItemFromBasketActions(itemName, itemId) {
-    if (this[`${itemName}StockCountInStack`] === 0) {
-      this.invokeUserCase(`${itemName} not exist in bucket`);
-      return;
+  removeItemFromBasketActions(index: number) {
+    const updatedItem = this.productsList[index];
+    if (this.itemStack.some((item) => item === updatedItem.productId)) {
+      if ((this.itemStack.slice(-1)[0] !== updatedItem.productId)) {
+        this.invokeUserCase(`${updatedItem.name} can only be removed after removing fruit\'s on top`);
+        return;
+      }
+      if (updatedItem.initialStock > updatedItem.stock) {
+        updatedItem.stock++;
+        this.itemStack.pop();
+      }
+      this.productsList[index] = updatedItem;
+    } else {
+      this.invokeUserCase(`${updatedItem.name} not exist in bucket`);
     }
-    if ((this.itemStack.slice(-1)[0] !== itemId)) {
-      this.invokeUserCase(`${itemName} can only be removed after removing fruit\'s on top`);
-      return;
-    }
-    this[`${itemName}StockCount`]++;
-    this[`${itemName}StockCountInStack`]--;
-    this.itemStack.pop();
   }
 
-  addItemToStack(action: string) {
+  initiateCartAction(itemId: string, index: number, operator: string) {
     if (this.userInfo.permission === 'none') {
       this.invokeUserCase('user don\'t have permission to perform this action');
       return;
     }
-    switch (action) {
-      case 'addApple':
-        this.adBasketActions('apple', 1);
-        break;
-      case 'addOrange':
-        this.adBasketActions('orange', 2);
-        break;
-      case 'addGrapes':
-        this.adBasketActions('grapes', 3);
-        break;
-    }
-  }
-  removeItemFromStack(action: string) {
-    if (this.userInfo.permission === 'none') {
-      this.invokeUserCase('user don\'t have permission to perform this action');
-      return;
-    }
-    switch (action) {
-      case 'removeApple':
-        this.removeItemFromBasketActions('apple', 1);
-        break;
-      case 'removeOrange':
-        this.removeItemFromBasketActions('orange', 2);
-        break;
-      case 'removeGrapes':
-        this.removeItemFromBasketActions('grapes', 3);
-        break;
+    if (operator === 'addItem') {
+      this.adBasketActions(+itemId, index);
+    } else {
+      this.removeItemFromBasketActions(index);
     }
   }
 
   getItemName(itemId: any) {
-    const fruitList = [{id: 1, name: 'apple'}, {id: 2, name: 'orange'}, {id: 3, name: 'grapes'}];
-    return fruitList.find((item) => item.id === itemId);
+    return this.productsList.find((item: any) => item.productId === itemId);
   }
 
 }

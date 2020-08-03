@@ -9,7 +9,7 @@
     background: #212121;
     margin-top: 5%;
     min-height: 500px;
-    max-height: 500px;
+    /* max-height: 500px; */
 }
 
 .item-name {
@@ -38,6 +38,13 @@
     min-height: 400px;
 }
 
+.item-information {
+    padding: 10px;
+    background: white;
+    margin-top: 3rem;
+    box-shadow: 1px 2px 1px 2px ghostwhite;
+}
+
 .red {
     background: #f45149;
 }
@@ -46,6 +53,9 @@
 }
 .grapes {
     background: #5360db;
+}
+.green {
+    background-color: greenyellow;
 }
 
 .card .image img {
