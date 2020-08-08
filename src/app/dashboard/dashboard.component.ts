@@ -1,16 +1,9 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Router } from '@angular/router';
 import { User } from '../login/login.component';
+import { DashboardService, Product } from './dashboard.service';
+import { Subscription } from 'rxjs';
 
-export interface Product {
-  name: string;
-  type: string;
-  stock: number;
-  initialStock: number;
-  purchased?: number;
-  productId: number;
-  color: string;
-}
 
 @Component({
   selector: 'app-dashboard',
@@ -18,77 +11,31 @@ export interface Product {
   styleUrls: ['./dashboard.component.css']
 })
 
-export class DashboardComponent implements OnInit {
+export class DashboardComponent implements OnInit, OnDestroy {
 
-  productsList: Product[] = [
-    {
-      name: 'apple',
-      type: 'fruit',
-      stock: 10,
-      initialStock: 10,
-      purchased: 0,
-      productId: 1,
-      color: '#ed4d3b'
-    },
-    {
-      name: 'orange',
-      type: 'fruit',
-      initialStock: 10,
-      stock: 10,
-      purchased: 0,
-      productId: 2,
-      color: '#e45a1b'
-
-    },
-    {
-      name: 'grapes',
-      type: 'fruit',
-      stock: 10,
-      initialStock: 10,
-      purchased: 0,
-      productId: 3,
-      color: '#a75c9f'
-    },
-    {
-      name: 'banana',
-      type: 'fruit',
-      stock: 15,
-      initialStock: 15,
-      purchased: 0,
-      productId: 4,
-      color: '#d0d042'
-    },
-    {
-      name: 'tomato',
-      type: 'vegetable',
-      stock: 15,
-      initialStock: 15,
-      purchased: 0,
-      productId: 5,
-      color: '#a54128'
-    },
-    {
-      name: 'mango',
-      type: 'fruit',
-      stock: 10,
-      initialStock: 15,
-      purchased: 0,
-      productId: 6,
-      color: '#efa001'
-    },
-  ];
+  productsList: Product[] = [];
+  productSubscription: Subscription;
+  errorMessageSubscription: Subscription;
 
   userInfo: User;
   itemStack = [];
   warningMessage = null;
 
-  constructor(private router: Router) { }
+  constructor(private router: Router, private dashboardService: DashboardService) { }
 
   ngOnInit(): void {
     this.userInfo = JSON.parse(localStorage.getItem('user'));
     if (!this.userInfo) {
       this.router.navigate(['/']);
     }
+    this.productsList = this.dashboardService.getProducts();
+    this.productSubscription = this.dashboardService.productChanges.subscribe((products: Product[]) => {
+      this.productsList = products;
+      console.log(this.productsList);
+    });
+    this.errorMessageSubscription = this.dashboardService.warningMessage.subscribe((errorMessage) => {
+      this.warningMessage = errorMessage;
+    });
   }
 
   invokeUserCase(errorMessage: string) {
@@ -96,13 +43,10 @@ export class DashboardComponent implements OnInit {
   }
 
   adBasketActions(itemId: number, index: number) {
-    const updateItem: Product = this.productsList[index];
-    if (updateItem.stock <= 0) {
-      this.invokeUserCase(`${updateItem.name} empty!`);
+    this.dashboardService.adBasketActions(index);
+    if (this.warningMessage) {
       return;
     }
-    updateItem.stock--;
-    this.productsList[index] = updateItem;
     this.itemStack.push(itemId);
   }
 
@@ -141,6 +85,12 @@ export class DashboardComponent implements OnInit {
 
   closeAlert() {
     this.warningMessage = null;
+  }
+
+  ngOnDestroy() {
+    if (this.productSubscription) {
+      this.productSubscription.unsubscribe();
+    }
   }
 
 }
