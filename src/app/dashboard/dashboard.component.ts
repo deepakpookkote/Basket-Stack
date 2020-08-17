@@ -31,7 +31,6 @@ export class DashboardComponent implements OnInit, OnDestroy {
     this.productsList = this.dashboardService.getProducts();
     this.productSubscription = this.dashboardService.productChanges.subscribe((products: Product[]) => {
       this.productsList = products;
-      console.log(this.productsList);
     });
     this.errorMessageSubscription = this.dashboardService.warningMessage.subscribe((errorMessage) => {
       this.warningMessage = errorMessage;
@@ -90,6 +89,9 @@ export class DashboardComponent implements OnInit, OnDestroy {
   ngOnDestroy() {
     if (this.productSubscription) {
       this.productSubscription.unsubscribe();
+    }
+    if (this.errorMessageSubscription) {
+      this.errorMessageSubscription.unsubscribe();
     }
   }
 
