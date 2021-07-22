@@ -10,6 +10,7 @@ import { LoginComponent } from './login/login.component';
 import { DashboardComponent } from './dashboard/dashboard.component';
 import { NavbarComponent } from './components/navbar/navbar.component';
 import { AlertComponent } from './shared/alert/alert.component';
+import { ProductListComponent } from './dashboard/product-list/product-list.component';
 
 @NgModule({
   declarations: [
@@ -17,7 +18,8 @@ import { AlertComponent } from './shared/alert/alert.component';
     LoginComponent,
     DashboardComponent,
     NavbarComponent,
-    AlertComponent
+    AlertComponent,
+    ProductListComponent
   ],
   imports: [
     BrowserModule,

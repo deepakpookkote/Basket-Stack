@@ -1,18 +1,16 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
-import { Router } from '@angular/router';
-import { User } from '../login/login.component';
-import { DashboardService, Product } from './dashboard.service';
-import { Subscription } from 'rxjs';
-
+import { Component, OnInit, OnDestroy } from "@angular/core";
+import { Router } from "@angular/router";
+import { User } from "../login/login.component";
+import { DashboardService } from "./dashboard.service";
+import { Subscription } from "rxjs";
+import { Product, productActionInfo } from "../shared/models/product-models";
 
 @Component({
-  selector: 'app-dashboard',
-  templateUrl: './dashboard.component.html',
-  styleUrls: ['./dashboard.component.css']
+  selector: "app-dashboard",
+  templateUrl: "./dashboard.component.html",
+  styleUrls: ["./dashboard.component.scss"],
 })
-
 export class DashboardComponent implements OnInit, OnDestroy {
-
   productsList: Product[] = [];
   productSubscription: Subscription;
   errorMessageSubscription: Subscription;
@@ -21,20 +19,26 @@ export class DashboardComponent implements OnInit, OnDestroy {
   itemStack = [];
   warningMessage = null;
 
-  constructor(private router: Router, private dashboardService: DashboardService) { }
+  constructor(
+    private router: Router,
+    private dashboardService: DashboardService
+  ) {}
 
   ngOnInit(): void {
-    this.userInfo = JSON.parse(localStorage.getItem('user'));
+    this.userInfo = JSON.parse(localStorage.getItem("user"));
     if (!this.userInfo) {
-      this.router.navigate(['/']);
+      this.router.navigate(["/"]);
     }
     this.productsList = this.dashboardService.getProducts();
-    this.productSubscription = this.dashboardService.productChanges.subscribe((products: Product[]) => {
-      this.productsList = products;
-    });
-    this.errorMessageSubscription = this.dashboardService.warningMessage.subscribe((errorMessage) => {
-      this.warningMessage = errorMessage;
-    });
+    this.productSubscription = this.dashboardService.productChanges.subscribe(
+      (products: Product[]) => {
+        this.productsList = products;
+      }
+    );
+    this.errorMessageSubscription =
+      this.dashboardService.warningMessage.subscribe((errorMessage) => {
+        this.warningMessage = errorMessage;
+      });
   }
 
   invokeUserCase(errorMessage: string) {
@@ -42,7 +46,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
   }
 
   adBasketActions(itemId: number, index: number) {
-    this.dashboardService.adBasketActions(index);
+    this.dashboardService.addBasketItem(index);
     if (this.warningMessage) {
       return;
     }
@@ -52,8 +56,10 @@ export class DashboardComponent implements OnInit, OnDestroy {
   removeItemFromBasketActions(index: number) {
     const updatedItem: Product = this.productsList[index];
     if (this.itemStack.some((item) => item === updatedItem.productId)) {
-      if ((this.itemStack.slice(-1)[0] !== updatedItem.productId)) {
-        this.invokeUserCase(`${updatedItem.name} can only be removed after removing fruit\'s on top`);
+      if (this.itemStack.slice(-1)[0] !== updatedItem.productId) {
+        this.invokeUserCase(
+          `${updatedItem.name} can only be removed after removing fruit\'s on top`
+        );
         return;
       }
       if (updatedItem.initialStock > updatedItem.stock) {
@@ -66,15 +72,23 @@ export class DashboardComponent implements OnInit, OnDestroy {
     }
   }
 
-  initiateCartAction(itemId: string, index: number, operator: string) {
-    if (this.userInfo.permission === 'none') {
-      this.invokeUserCase('user don\'t have permission to perform this action');
+  /**
+   *
+   * @param productActionInfo - this object contains user actions which is performed on the products
+   * this will get {productId, index, and userAction as parameters}
+   */
+  initiateCartAction(productActionInfo: productActionInfo) {
+    if (this.userInfo.permission === "none") {
+      this.invokeUserCase("user don't have permission to perform this action");
       return;
     }
-    if (operator === 'addItem') {
-      this.adBasketActions(+itemId, index);
+    if (productActionInfo.userAction === "addItem") {
+      this.adBasketActions(
+        +productActionInfo.productId,
+        productActionInfo.index
+      );
     } else {
-      this.removeItemFromBasketActions(index);
+      this.removeItemFromBasketActions(productActionInfo.index);
     }
   }
 
@@ -94,5 +108,4 @@ export class DashboardComponent implements OnInit, OnDestroy {
       this.errorMessageSubscription.unsubscribe();
     }
   }
-
 }

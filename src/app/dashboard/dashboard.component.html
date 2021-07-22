@@ -1,27 +1,17 @@
 <app-navbar></app-navbar>
-<app-alert [message]="warningMessage" *ngIf="warningMessage" (close)="closeAlert()"></app-alert>
-<div class="container add-to-cart">
+<app-alert
+  [message]="warningMessage"
+  *ngIf="warningMessage"
+  (close)="closeAlert()"
+></app-alert>
+<div class="product-view-wrapper">
   <div class="row">
     <div class="col-md-8 product-view">
       <div class="row">
-        <div class="col-md-4" *ngFor="let product of productsList; let i=index">
-          <div class="card_item" [ngStyle]="{'background-color': product.color}">
-            <div class="item-name">
-              {{product.name | titlecase}}
-            </div>
-            <article>
-              <h2 class="stock-count">{{ product.stock }}</h2>
-              <div style="display: flex;">
-                <div class="actionButtons grow" (click)="initiateCartAction(product.productId, i, 'addItem')">
-                  +
-                </div>
-                <div class="actionButtons grow" (click)="initiateCartAction(product.productId, i, 'removeItem')">
-                  -
-                </div>
-              </div>
-            </article>
-          </div>
-        </div>
+        <app-product-list
+          [productList]="productsList"
+          (productActionEvent)="initiateCartAction($event)"
+        ></app-product-list>
       </div>
     </div>
     <div class="col-md-4">
@@ -29,10 +19,13 @@
         <h3 class="text-white text-center">Fruits Bucket</h3>
         <div class="column">
           <div>
-            <article *ngIf="itemStack?.length>0; else emptyBasket">
-              <div *ngFor="let item of itemStack; let i=index">
-                <span class="fruit-content text-capitalize" [ngStyle]="{'background-color': getItemName(item).color}">
-                  {{getItemName(item).name}}
+            <article *ngIf="itemStack?.length > 0; else emptyBasket">
+              <div *ngFor="let item of itemStack; let i = index">
+                <span
+                  class="fruit-content text-capitalize"
+                  [ngStyle]="{ 'background-color': getItemName(item).color }"
+                >
+                  {{ getItemName(item).name }}
                 </span>
               </div>
             </article>
@@ -43,13 +36,19 @@
         </div>
       </div>
       <div class="item-information">
-        <p><u>Total Item Count : {{itemStack.length}}</u></p>
+        <p>
+          <u>Total Item Count : {{ itemStack.length }}</u>
+        </p>
         <p><u>Individual Items Purchased :</u></p>
-          <span *ngFor="let product of productsList; let i=index">
-             <ng-container *ngIf="product.initialStock !== product.stock">
-              <span class="badge badge-info mr-2">{{product.name}} - ({{product.initialStock - product.stock}})</span>
-             </ng-container>
-          </span>
+        <span *ngFor="let product of productsList; let i = index">
+          <ng-container *ngIf="product.initialStock !== product.stock">
+            <span class="badge badge-info mr-2"
+              >{{ product.name }} - ({{
+                product.initialStock - product.stock
+              }})</span
+            >
+          </ng-container>
+        </span>
       </div>
     </div>
   </div>

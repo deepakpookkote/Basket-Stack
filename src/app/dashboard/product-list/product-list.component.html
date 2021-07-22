@@ -1,0 +1,29 @@
+<div
+  class="col-md-4 card_item"
+  *ngFor="let product of productList; let i = index"
+>
+  <div [ngStyle]="{ 'background-color': product.color }">
+    <div class="product-name-text">
+      {{ product.name | titlecase }}
+    </div>
+    <article>
+      <h2 class="stock-count">{{ product.stock }}</h2>
+      <div style="display: flex">
+        <div
+          class="actionButtons grow"
+          (click)="emitProductionActionEvent(product.productId, i, 'addItem')"
+        >
+          +
+        </div>
+        <div
+          class="actionButtons grow"
+          (click)="
+            emitProductionActionEvent(product.productId, i, 'removeItem')
+          "
+        >
+          -
+        </div>
+      </div>
+    </article>
+  </div>
+</div>
