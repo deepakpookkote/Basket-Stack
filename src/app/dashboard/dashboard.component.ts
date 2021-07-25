@@ -11,64 +11,69 @@ import { Product, productActionInfo } from "../shared/models/product-models";
   styleUrls: ["./dashboard.component.scss"],
 })
 export class DashboardComponent implements OnInit, OnDestroy {
-  productsList: Product[] = [];
-  productSubscription: Subscription;
-  errorMessageSubscription: Subscription;
+  public productsList: Product[] = [];
 
-  userInfo: User;
-  itemStack = [];
-  warningMessage = null;
+  private productSubscription: Subscription;
+
+  private errorMessageSubscription: Subscription;
+
+  public userInfo: User;
+
+  public cartItems = [];
+
+  public warningMessage = null;
 
   constructor(
     private router: Router,
     private dashboardService: DashboardService
   ) {}
 
-  ngOnInit(): void {
+  public ngOnInit(): void {
     this.userInfo = JSON.parse(localStorage.getItem("user"));
     if (!this.userInfo) {
       this.router.navigate(["/"]);
     }
     this.productsList = this.dashboardService.getProducts();
-    this.productSubscription = this.dashboardService.productChanges.subscribe(
-      (products: Product[]) => {
-        this.productsList = products;
-      }
-    );
+    this.productSubscription =
+      this.dashboardService.selectedProductChanges$.subscribe(
+        (products: Product[]) => {
+          this.productsList = products;
+        }
+      );
     this.errorMessageSubscription =
-      this.dashboardService.warningMessage.subscribe((errorMessage) => {
+      this.dashboardService.warningMessage$.subscribe((errorMessage) => {
         this.warningMessage = errorMessage;
       });
   }
 
-  invokeUserCase(errorMessage: string) {
+  private initWarningMessage(errorMessage: string) {
     this.warningMessage = errorMessage;
   }
 
-  adBasketActions(itemId: number, index: number) {
+  private adBasketActions(itemId: number, index: number) {
     this.dashboardService.addBasketItem(index);
     if (this.warningMessage) {
       return;
     }
-    this.itemStack.push(itemId);
+    this.cartItems = [...this.cartItems, itemId];
   }
 
-  removeItemFromBasketActions(index: number) {
+  private removeItemFromBasketActions(index: number) {
     const updatedItem: Product = this.productsList[index];
-    if (this.itemStack.some((item) => item === updatedItem.productId)) {
-      if (this.itemStack.slice(-1)[0] !== updatedItem.productId) {
-        this.invokeUserCase(
+    if (this.cartItems.some((item) => item === updatedItem.productId)) {
+      if (this.cartItems.slice(-1)[0] !== updatedItem.productId) {
+        this.initWarningMessage(
           `${updatedItem.name} can only be removed after removing fruit\'s on top`
         );
         return;
       }
       if (updatedItem.initialStock > updatedItem.stock) {
         updatedItem.stock++;
-        this.itemStack.pop();
+        this.cartItems.pop();
       }
       this.productsList[index] = updatedItem;
     } else {
-      this.invokeUserCase(`${updatedItem.name} not exist in bucket`);
+      this.initWarningMessage(`${updatedItem.name} not exist in bucket`);
     }
   }
 
@@ -77,9 +82,11 @@ export class DashboardComponent implements OnInit, OnDestroy {
    * @param productActionInfo - this object contains user actions which is performed on the products
    * this will get {productId, index, and userAction as parameters}
    */
-  initiateCartAction(productActionInfo: productActionInfo) {
+  public initiateCartAction(productActionInfo: productActionInfo) {
     if (this.userInfo.permission === "none") {
-      this.invokeUserCase("user don't have permission to perform this action");
+      this.initWarningMessage(
+        "user don't have permission to perform this action"
+      );
       return;
     }
     if (productActionInfo.userAction === "addItem") {
@@ -92,15 +99,11 @@ export class DashboardComponent implements OnInit, OnDestroy {
     }
   }
 
-  getItemName(itemId: any) {
-    return this.productsList.find((item: any) => item.productId === itemId);
-  }
-
-  closeAlert() {
+  public closeAlert() {
     this.warningMessage = null;
   }
 
-  ngOnDestroy() {
+  public ngOnDestroy() {
     if (this.productSubscription) {
       this.productSubscription.unsubscribe();
     }

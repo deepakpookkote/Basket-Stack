@@ -17,46 +17,4 @@
     flex-wrap: wrap;
     justify-content: space-between;
   }
-
-  .item-basket {
-    border: 1px solid grey;
-    padding: 10px;
-    box-shadow: 1px 3px 3px 3px #c2c2c2;
-    overflow: auto;
-    max-height: 440px;
-    overflow-y: auto;
-    min-height: 400px;
-  }
-
-  .item-information {
-    padding: 10px;
-    background: white;
-    margin-top: 3rem;
-    box-shadow: 1px 2px 1px 2px ghostwhite;
-  }
-
-  .fruit-content {
-    width: 100%;
-    display: block;
-    padding: 2px;
-    text-align: center;
-    border-radius: 50px;
-    margin-top: 4px;
-  }
-
-  .card article p {
-    flex: 1;
-  }
-  .card article .bottom {
-    flex: 0;
-  }
-
-  .section-basket-stack {
-    text-align: center;
-    margin: auto;
-  }
-
-  .grow {
-    transition: all 0.2s ease-in-out;
-  }
 }

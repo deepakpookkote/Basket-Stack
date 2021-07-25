@@ -1,0 +1,13 @@
+<div class="item-information">
+  <p>
+    <u>Total Item Count : {{ cartItems.length }}</u>
+  </p>
+  <p><u>Individual Items Purchased :</u></p>
+  <span *ngFor="let product of productList; let i = index">
+    <ng-container *ngIf="product.initialStock !== product.stock">
+      <span class="badge badge-info mr-2"
+        >{{ product.name }} - ({{ product.initialStock - product.stock }})</span
+      >
+    </ng-container>
+  </span>
+</div>

@@ -1,4 +1,4 @@
-import { Component, Input, OnInit, Output, EventEmitter } from "@angular/core";
+import { Component, Input, Output, EventEmitter } from "@angular/core";
 import {
   Product,
   productActionInfo,
@@ -9,16 +9,13 @@ import {
   templateUrl: "./product-list.component.html",
   styleUrls: ["./product-list.component.scss"],
 })
-export class ProductListComponent implements OnInit {
+export class ProductListComponent {
   /**
    * Product List array from the parent component
    * */
   @Input() public productList: Product;
-  @Output() productActionEvent = new EventEmitter<any>();
-
-  ngOnInit(): void {
-    console.log(this.productList);
-  }
+  @Output() productActionEvent: EventEmitter<productActionInfo> =
+    new EventEmitter<productActionInfo>();
 
   /**
    * This method will emit user selected action and other product information to the parent component

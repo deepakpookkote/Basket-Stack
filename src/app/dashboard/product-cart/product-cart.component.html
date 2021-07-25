@@ -1,0 +1,22 @@
+<div class="item-basket">
+  <h3 class="text-white text-center">Cart</h3>
+  <div class="column">
+    <article>
+      <ng-container *ngIf="cartDisplayItems?.length > 0; else emptyBasket">
+        <div *ngFor="let item of cartDisplayItems; let i = index">
+          <span
+            class="fruit-content text-capitalize"
+            [ngStyle]="{
+              'background-color': dashboardService.getItemName(item).color
+            }"
+          >
+            {{ dashboardService.getItemName(item).name }}
+          </span>
+        </div>
+      </ng-container>
+      <ng-template #emptyBasket>
+        <h4 class="text-white text-center mt-5">Your cart is empty!</h4>
+      </ng-template>
+    </article>
+  </div>
+</div>

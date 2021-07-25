@@ -1,6 +1,6 @@
-import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { Router } from '@angular/router';
+import { Component, OnInit } from "@angular/core";
+import { FormBuilder, FormGroup, Validators } from "@angular/forms";
+import { Router } from "@angular/router";
 
 export interface User {
   id: number;
@@ -10,62 +10,58 @@ export interface User {
 }
 
 @Component({
-  selector: 'app-login',
-  templateUrl: './login.component.html',
-  styleUrls: ['./login.component.css']
+  selector: "app-login",
+  templateUrl: "./login.component.html",
+  styleUrls: ["./login.component.scss"],
 })
-
-
-
 export class LoginComponent implements OnInit {
+  public loginForm: FormGroup;
 
-  loginForm: FormGroup;
-  submitted = false;
-  flagsCheck = false;
-  message = "";
+  public submitted = false;
+
+  public flagsCheck = false;
+
+  public message = "";
 
   private authData: User[] = [
     {
-      "id": 1,
-      "name": "admin",
-      "permission": "all",
-      "password": "admin"
+      id: 1,
+      name: "admin",
+      permission: "all",
+      password: "admin",
     },
     {
-      "id": 2,
-      "name": "deepak",
-      "permission": "none",
-      "password": "123"
-    }
+      id: 2,
+      name: "deepak",
+      permission: "none",
+      password: "123",
+    },
   ];
-  constructor(
-    private formBuilder: FormBuilder,
-    private router: Router
-  ) { }
 
-  ngOnInit() {
+  constructor(private formBuilder: FormBuilder, private router: Router) {}
+
+  public ngOnInit() {
     localStorage.clear();
     this.loginForm = this.formBuilder.group({
-      username: ['', Validators.required],
-      password: ['', Validators.required]
+      username: ["", Validators.required],
+      password: ["", Validators.required],
     });
   }
-  get f() {
+
+  public get f() {
     return this.loginForm.controls;
   }
 
-  onSubmit() {
+  public onSubmit() {
     this.submitted = true;
     if (this.loginForm.invalid) {
       return;
-
     }
-
   }
 
-  checkLogin() {
-    const userName = this.loginForm.controls['username'].value;
-    const password = this.loginForm.controls['password'].value;
+  public checkLogin() {
+    const userName = this.loginForm.controls["username"].value;
+    const password = this.loginForm.controls["password"].value;
 
     if (!userName && !password) {
       return;
@@ -80,12 +76,10 @@ export class LoginComponent implements OnInit {
 
     if (user.password === password) {
       this.message = "login success";
-      this.router.navigate(['/home']);
-      localStorage.setItem('user', JSON.stringify(user));
+      this.router.navigate(["/home"]);
+      localStorage.setItem("user", JSON.stringify(user));
     } else {
       this.message = "Password is incorrect";
     }
-
   }
-
 }

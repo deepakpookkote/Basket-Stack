@@ -11,6 +11,8 @@ import { DashboardComponent } from './dashboard/dashboard.component';
 import { NavbarComponent } from './components/navbar/navbar.component';
 import { AlertComponent } from './shared/alert/alert.component';
 import { ProductListComponent } from './dashboard/product-list/product-list.component';
+import { ProductCartComponent } from './dashboard/product-cart/product-cart.component';
+import { ProductSummaryComponent } from './dashboard/product-summary/product-summary.component';
 
 @NgModule({
   declarations: [
@@ -19,7 +21,9 @@ import { ProductListComponent } from './dashboard/product-list/product-list.comp
     DashboardComponent,
     NavbarComponent,
     AlertComponent,
-    ProductListComponent
+    ProductListComponent,
+    ProductCartComponent,
+    ProductSummaryComponent
   ],
   imports: [
     BrowserModule,

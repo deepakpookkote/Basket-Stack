@@ -7,49 +7,20 @@
 <div class="product-view-wrapper">
   <div class="row">
     <div class="col-md-8 product-view">
-      <div class="row">
-        <app-product-list
-          [productList]="productsList"
-          (productActionEvent)="initiateCartAction($event)"
-        ></app-product-list>
-      </div>
+      <app-product-list
+        [productList]="productsList"
+        (productActionEvent)="initiateCartAction($event)"
+      >
+      </app-product-list>
     </div>
     <div class="col-md-4">
-      <div class="item-basket">
-        <h3 class="text-white text-center">Fruits Bucket</h3>
-        <div class="column">
-          <div>
-            <article *ngIf="itemStack?.length > 0; else emptyBasket">
-              <div *ngFor="let item of itemStack; let i = index">
-                <span
-                  class="fruit-content text-capitalize"
-                  [ngStyle]="{ 'background-color': getItemName(item).color }"
-                >
-                  {{ getItemName(item).name }}
-                </span>
-              </div>
-            </article>
-            <ng-template #emptyBasket>
-              <h4 class="text-white text-center mt-5">Cart Empty!!</h4>
-            </ng-template>
-          </div>
-        </div>
-      </div>
-      <div class="item-information">
-        <p>
-          <u>Total Item Count : {{ itemStack.length }}</u>
-        </p>
-        <p><u>Individual Items Purchased :</u></p>
-        <span *ngFor="let product of productsList; let i = index">
-          <ng-container *ngIf="product.initialStock !== product.stock">
-            <span class="badge badge-info mr-2"
-              >{{ product.name }} - ({{
-                product.initialStock - product.stock
-              }})</span
-            >
-          </ng-container>
-        </span>
-      </div>
+      <!--cart items component-->
+      <app-product-cart [cartItems]="cartItems"></app-product-cart>
+      <!--Product summary information will be added here-->
+      <app-product-summary
+        [cartItems]="cartItems"
+        [productList]="productsList"
+      ></app-product-summary>
     </div>
   </div>
 </div>
